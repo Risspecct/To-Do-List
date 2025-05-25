@@ -1,5 +1,6 @@
 package users.rishik.toDoList.Controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import users.rishik.toDoList.Exceptions.NotFoundException;
 import users.rishik.toDoList.Services.ListService;
 
 @RestController
-@RequestMapping("/{userId}/list")
+@RequestMapping("/users/{userId}/list")
 public class ListController {
     private final ListService listService;
 
@@ -20,7 +21,7 @@ public class ListController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addList(@RequestBody ListDto dto, @PathVariable long userId){
+    public ResponseEntity<?> addList(@RequestBody @Valid ListDto dto, @PathVariable long userId){
         try {
             return new ResponseEntity<>(this.listService.addList(dto, userId), HttpStatus.CREATED);
         } catch (Exception e) {
@@ -51,7 +52,7 @@ public class ListController {
     }
 
     @PutMapping("/update/{listId}")
-    public ResponseEntity<?> updateList(@PathVariable long userId, @PathVariable long listId, @RequestBody UpdateListDto dto){
+    public ResponseEntity<?> updateList(@PathVariable long userId, @PathVariable long listId, @RequestBody @Valid UpdateListDto dto){
         try {
             return ResponseEntity.ok(this.listService.updateList(userId, listId, dto));
         } catch (NotFoundException e) {

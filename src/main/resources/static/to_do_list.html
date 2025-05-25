@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do App</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        section { margin-bottom: 30px; padding: 20px; border: 1px solid #ccc; border-radius: 10px; }
+        input, select, button, textarea { margin: 5px; padding: 8px; }
+    </style>
+</head>
+<body>
+    <h1>To-Do App Frontend</h1>
+
+    <!-- User Section -->
+    <section>
+        <h2>User Operations</h2>
+        <input type="text" id="userName" placeholder="Name" />
+        <input type="email" id="userEmail" placeholder="Email" />
+        <input type="password" id="userPassword" placeholder="Password" />
+        <button onclick="addUser()">Add User</button>
+
+        <input type="number" id="findUserId" placeholder="User ID" />
+        <button onclick="findUser()">Find User</button>
+
+        <input type="number" id="updateUserId" placeholder="User ID" />
+        <button onclick="updateUser()">Update User</button>
+
+        <input type="number" id="deleteUserId" placeholder="User ID" />
+        <button onclick="deleteUser()">Delete User</button>
+    </section>
+
+    <!-- List Section -->
+    <section>
+        <h2>List Operations</h2>
+        <input type="number" id="listUserId" placeholder="User ID" />
+        <input type="text" id="listName" placeholder="List Name" />
+        <input type="text" id="listDescription" placeholder="Description" />
+        <button onclick="addList()">Add List</button>
+
+        <input type="number" id="findListUserId" placeholder="User ID" />
+        <input type="number" id="findListId" placeholder="List ID" />
+        <button onclick="findList()">Find List</button>
+
+        <input type="number" id="getAllListsUserId" placeholder="User ID" />
+        <button onclick="getAllLists()">Get All Lists</button>
+
+        <input type="number" id="updateListUserId" placeholder="User ID" />
+        <input type="number" id="updateListId" placeholder="List ID" />
+        <input type="text" id="updateListName" placeholder="New Name" />
+        <input type="text" id="updateListDesc" placeholder="New Description" />
+        <button onclick="updateList()">Update List</button>
+
+        <input type="number" id="deleteListUserId" placeholder="User ID" />
+        <input type="number" id="deleteListId" placeholder="List ID" />
+        <button onclick="deleteList()">Delete List</button>
+    </section>
+
+    <!-- Task Section -->
+    <section>
+        <h2>Task Operations</h2>
+        <input type="number" id="taskUserId" placeholder="User ID" />
+        <input type="number" id="taskListId" placeholder="List ID" />
+        <input type="text" id="taskDescription" placeholder="Task Description" />
+        <input type="datetime-local" id="taskDueDate" />
+        <select id="taskPriority">
+            <option value="LOW">LOW</option>
+            <option value="MEDIUM" selected>MEDIUM</option>
+            <option value="HIGH">HIGH</option>
+        </select>
+        <select id="taskStatus">
+            <option value="PENDING" selected>PENDING</option>
+            <option value="IN_PROGRESS">IN_PROGRESS</option>
+            <option value="COMPLETED">COMPLETED</option>
+        </select>
+        <button onclick="addTask()">Add Task</button>
+
+        <input type="number" id="getTaskUserId" placeholder="User ID" />
+        <input type="number" id="getTaskListId" placeholder="List ID" />
+        <input type="number" id="getTaskId" placeholder="Task ID" />
+        <button onclick="getTask()">Get Task</button>
+
+        <input type="number" id="getAllTasksUserId" placeholder="User ID" />
+        <input type="number" id="getAllTasksListId" placeholder="List ID" />
+        <button onclick="getAllTasks()">Get All Tasks</button>
+
+        <input type="number" id="updateTaskUserId" placeholder="User ID" />
+        <input type="number" id="updateTaskListId" placeholder="List ID" />
+        <input type="number" id="updateTaskId" placeholder="Task ID" />
+        <input type="text" id="updateTaskDesc" placeholder="New Description" />
+        <input type="datetime-local" id="updateTaskCreated" />
+        <input type="datetime-local" id="updateTaskDue" />
+        <select id="updateTaskPriority">
+            <option value="LOW">LOW</option>
+            <option value="MEDIUM">MEDIUM</option>
+            <option value="HIGH">HIGH</option>
+        </select>
+        <select id="updateTaskStatus">
+            <option value="PENDING">PENDING</option>
+            <option value="IN_PROGRESS">IN_PROGRESS</option>
+            <option value="COMPLETED">COMPLETED</option>
+        </select>
+        <button onclick="updateTask()">Update Task</button>
+
+        <input type="number" id="deleteTaskUserId" placeholder="User ID" />
+        <input type="number" id="deleteTaskListId" placeholder="List ID" />
+        <input type="number" id="deleteTaskId" placeholder="Task ID" />
+        <button onclick="deleteTask()">Delete Task</button>
+    </section>
+
+    <pre id="output"></pre>
+
+    <script>
+        const baseUrl = 'http://localhost:8080';
+        const output = document.getElementById('output');
+
+        function showResult(data) {
+            output.textContent = JSON.stringify(data, null, 2);
+        }
+
+        function addUser() {
+            fetch(`${baseUrl}/user/add`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: userName.value,
+                    email: userEmail.value,
+                    password: userPassword.value
+                })
+            }).then(r => r.json()).then(showResult);
+        }
+
+        function findUser() {
+            fetch(`${baseUrl}/user/find/${findUserId.value}`)
+                .then(r => r.json()).then(showResult);
+        }
+
+        function updateUser() {
+            fetch(`${baseUrl}/user/update/${updateUserId.value}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: userName.value,
+                    email: userEmail.value,
+                    password: userPassword.value
+                })
+            }).then(r => r.json()).then(showResult);
+        }
+
+        function deleteUser() {
+            fetch(`${baseUrl}/user/delete/${deleteUserId.value}`, { method: 'DELETE' })
+                .then(r => r.text()).then(showResult);
+        }
+
+        function addList() {
+            fetch(`${baseUrl}/users/${listUserId.value}/list/add`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: listName.value,
+                    description: listDescription.value
+                })
+            }).then(r => r.json()).then(showResult);
+        }
+
+        function findList() {
+            fetch(`${baseUrl}/users/${findListUserId.value}/list/find/${findListId.value}`)
+                .then(r => r.json()).then(showResult);
+        }
+
+        function getAllLists() {
+            fetch(`${baseUrl}/users/${getAllListsUserId.value}/list/all`)
+                .then(r => r.json()).then(showResult);
+        }
+
+        function updateList() {
+            fetch(`${baseUrl}/users/${updateListUserId.value}/list/update/${updateListId.value}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: updateListName.value,
+                    description: updateListDesc.value,
+                    userId: parseInt(updateListUserId.value)
+                })
+            }).then(r => r.json()).then(showResult);
+        }
+
+        function deleteList() {
+            fetch(`${baseUrl}/users/${deleteListUserId.value}/list/delete/${deleteListId.value}`, { method: 'DELETE' })
+                .then(r => r.text()).then(showResult);
+        }
+
+        function addTask() {
+            fetch(`${baseUrl}/users/${taskUserId.value}/lists/${taskListId.value}/tasks/add`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    description: taskDescription.value,
+                    dueDate: taskDueDate.value,
+                    priority: taskPriority.value,
+                    status: taskStatus.value
+                })
+            }).then(r => r.json()).then(showResult);
+        }
+
+        function getTask() {
+            fetch(`${baseUrl}/users/${getTaskUserId.value}/lists/${getTaskListId.value}/tasks/find/${getTaskId.value}`)
+                .then(r => r.json()).then(showResult);
+        }
+
+        function getAllTasks() {
+            fetch(`${baseUrl}/users/${getAllTasksUserId.value}/lists/${getAllTasksListId.value}/tasks/find/all`)
+                .then(r => r.json()).then(showResult);
+        }
+
+        function updateTask() {
+            fetch(`${baseUrl}/users/${updateTaskUserId.value}/lists/${updateTaskListId.value}/tasks/update/${updateTaskId.value}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    description: updateTaskDesc.value,
+                    createdAt: updateTaskCreated.value,
+                    dueDate: updateTaskDue.value,
+                    priority: updateTaskPriority.value,
+                    status: updateTaskStatus.value
+                })
+            }).then(r => r.json()).then(showResult);
+        }
+
+        function deleteTask() {
+            fetch(`${baseUrl}/users/${deleteTaskUserId.value}/lists/${deleteTaskListId.value}/tasks/delete/${deleteTaskId.value}`, { method: 'DELETE' })
+                .then(r => r.text()).then(showResult);
+        }
+    </script>
+</body>
+</html>

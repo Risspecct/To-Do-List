@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable long userId, @RequestBody UserDto user){
+    public ResponseEntity<?> updateUser(@PathVariable long userId, @RequestBody @Valid UserDto user){
         try {
             return new ResponseEntity<>(this.userService.updateUser(user, userId), HttpStatus.ACCEPTED);
         } catch (NotFoundException e){
