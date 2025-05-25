@@ -24,6 +24,8 @@ public class ListController {
     public ResponseEntity<?> addList(@RequestBody @Valid ListDto dto, @PathVariable long userId){
         try {
             return new ResponseEntity<>(this.listService.addList(dto, userId), HttpStatus.CREATED);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }

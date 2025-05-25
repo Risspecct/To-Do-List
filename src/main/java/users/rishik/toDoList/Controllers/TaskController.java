@@ -27,6 +27,8 @@ public class TaskController {
             return new ResponseEntity<>(this.taskService.addTask(userId, listId, dto), HttpStatus.CREATED);
         }catch (UnauhorizedAccessException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e){
             return ResponseEntity.internalServerError().body(e.getMessage());
         }

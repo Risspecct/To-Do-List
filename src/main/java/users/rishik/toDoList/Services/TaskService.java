@@ -11,6 +11,7 @@ import users.rishik.toDoList.Repositories.TaskRepository;
 import users.rishik.toDoList.entities.Task;
 import users.rishik.toDoList.entities.TaskList;
 import users.rishik.toDoList.mappers.TaskMapper;
+import users.rishik.toDoList.projections.TaskView;
 
 import java.util.List;
 
@@ -33,20 +34,21 @@ public class TaskService {
         return this.taskRepository.save(task);
     }
 
-    public Task getTask(long userId, long listId, long taskId){
+    public TaskView getTask(long userId, long listId, long taskId){
         this.validate(userId, listId);
-        return this.taskRepository.findById(taskId).orElseThrow(() -> new NotFoundException("Task not found"));
+        return this.taskRepository.findProjectById(taskId).orElseThrow(() -> new NotFoundException("No task with Id: " + taskId));
     }
 
-    public List<Task> getAllTasks(long userId, long listId){
+    public List<TaskView> getAllTasks(long userId, long listId){
         this.validate(userId, listId);
-        List<Task> tasks = this.taskRepository.findAllByTaskListId(listId);
+        List<TaskView> tasks = this.taskRepository.findAllByTaskListId(listId);
         if (tasks.isEmpty()) throw new NotFoundException("No tasks present in this list");
         return tasks;
     }
 
     public Task updateTask(long userId, long listId, long taskId, UpdateTaskDto dto){
-        Task task = this.getTask(userId, listId, taskId);
+        this.validate(userId, listId);
+        Task task = this.taskRepository.findById(taskId).orElseThrow(() -> new NotFoundException("No ask found with id: taskId"));
         if (dto.getDescription() != null) task.setDescription(dto.getDescription());
         if (dto.getDueDate() != null) task.setDueDate(dto.getDueDate());
         if (dto.getStatus() != null) task.setStatus(dto.getStatus());
