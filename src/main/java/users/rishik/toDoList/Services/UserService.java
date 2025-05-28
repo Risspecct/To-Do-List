@@ -6,6 +6,9 @@ import users.rishik.toDoList.Dtos.UserDto;
 import users.rishik.toDoList.Exceptions.NotFoundException;
 import users.rishik.toDoList.Repositories.UserRepository;
 import users.rishik.toDoList.entities.User;
+import users.rishik.toDoList.projections.UserView;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -22,6 +25,10 @@ public class UserService {
 
     public User findUser(long userId){
         return this.userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id :" + userId +" not found"));
+    }
+
+    public List<User> findAllUsers(){
+        return this.userRepository.findAll();
     }
 
     public User updateUser(UserDto user, long userId){
