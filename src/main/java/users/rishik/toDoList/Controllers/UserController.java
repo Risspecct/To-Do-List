@@ -44,6 +44,15 @@ public class UserController {
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User user){
+        try {
+            return new ResponseEntity<>(this.userService.verify(user), HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/find/{userId}")
     public ResponseEntity<?> findUser(@PathVariable long userId){
         try {

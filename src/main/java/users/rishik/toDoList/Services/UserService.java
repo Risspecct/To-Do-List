@@ -1,22 +1,26 @@
 package users.rishik.toDoList.Services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import users.rishik.toDoList.Dtos.UserDto;
 import users.rishik.toDoList.Exceptions.NotFoundException;
 import users.rishik.toDoList.Repositories.UserRepository;
 import users.rishik.toDoList.entities.User;
-import users.rishik.toDoList.projections.UserView;
 
 import java.util.List;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final AuthenticationManager authManager;
+    private final JwtService jwtService;
 
-    @Autowired
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository, AuthenticationManager authManager, JwtService jwtService){
         this.userRepository = userRepository;
+        this.authManager = authManager;
+        this.jwtService = jwtService;
     }
 
     public User addUser(User user){
@@ -41,5 +45,15 @@ public class UserService {
 
     public void deleteUser(long userId){
         this.userRepository.deleteById(userId);
+    }
+
+
+    public String verify(User user){
+        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword()));
+        if (authentication.isAuthenticated()) {
+            User existingUser = this.userRepository.findByName(user.getName());
+            return jwtService.generateToken(existingUser);
+        }
+        else return "Login Failed";
     }
 }
