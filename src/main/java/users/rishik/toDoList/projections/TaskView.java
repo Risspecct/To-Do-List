@@ -6,9 +6,9 @@ import users.rishik.toDoList.enums.Status;
 import java.time.LocalDateTime;
 
 public interface TaskView {
+    Long getId();
     String getDescription();
     LocalDateTime getDueDate();
     Priority getPriority();
     Status getStatus();
-    TaskListView getTaskList();
 }
