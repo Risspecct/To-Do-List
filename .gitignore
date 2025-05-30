@@ -1,5 +1,6 @@
 # Ignore target directory (build output)
 target/
+test-output/
 
 # Ignore Maven wrapper JAR except the one inside .mvn (used for mvnw)
 !.mvn/wrapper/maven-wrapper.jar
@@ -35,6 +36,7 @@ nbdist/
 
 # Sensitive Configuration
 src/main/resources/application.properties
+.env
 
 # Documentation (optional, only if you don't want to track this file)
 HELP.md
